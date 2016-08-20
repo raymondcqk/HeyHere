@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/lv_item_bg_selector"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/item_project_title"
+            style="@style/lv_text"
+            android:layout_margin="5dp"
+            android:text="XXXX项目组招新啦！"
+            android:textSize="22sp"/>
+
+        <View
+            android:id="@+id/pubinfo_devider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/item_project_title"
+            android:background="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/item_project_brief"
+            style="@style/lv_text"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/pubinfo_devider"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/item_pubdate_title"
+            android:ellipsize="end"
+            android:lineSpacingExtra="1dp"
+            android:maxLines="8"
+            android:text="简介:这是一个狂帅炫酷的项目团队，热邪期待每一个充满希望的你的到来，啊哈哈"
+            android:textSize="10sp"
+            />
+
+        <TextView
+            android:id="@+id/item_orgnization"
+            style="@style/lv_text"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/item_project_brief"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:text="大云屋•众创空间"/>
+
+        <TextView
+            android:id="@+id/item_publisher"
+            style="@style/lv_text"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/item_orgnization"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:text="陈其康"/>
+
+
+        <TextView
+            android:id="@+id/item_pubdate"
+            style="@style/lv_text"
+            android:layout_above="@+id/item_deadline_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:text="2016年8月10日"/>
+
+        <TextView
+            android:id="@+id/item_pubdate_title"
+            style="@style/lv_text"
+            android:layout_above="@+id/item_deadline_title"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_toLeftOf="@id/item_pubdate"
+            android:text="发布:"/>
+
+        <TextView
+            android:id="@+id/item_deadline_title"
+            style="@style/lv_text"
+            android:layout_alignBottom="@+id/item_project_brief"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_toLeftOf="@id/item_pubdate"
+            android:text="截止:"/>
+
+        <TextView
+            android:id="@+id/item_deadline"
+            style="@style/lv_text"
+            android:layout_alignBottom="@+id/item_project_brief"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:text="2016年8月18日"/>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/lv_item_bg_selector"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/lv_item_contact_avatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/exit"/>
+
+        <TextView
+            android:id="@+id/lv_item_contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/lv_item_contact_avatar"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/lv_item_contact_avatar"
+            android:text="RaymondChan"
+            android:textColor="#333"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/lv_item_contact_identity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/lv_item_contact_name"
+            android:layout_below="@+id/lv_item_contact_name"
+            android:layout_marginTop="2dp"
+            android:text="大云屋•众创空间 队长"
+            android:textColor="#333"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:id="@+id/lv_item_contact_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/lv_item_contact_name"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/lv_item_contact_name"
+            android:text="13610164743"
+            android:textColor="#333"
+            android:textSize="10sp"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/next_96px"/>
+    </RelativeLayout>
+</LinearLayout>

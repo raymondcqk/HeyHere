@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        style="@style/guide_img"
+        android:src="@drawable/atom"/>
+
+    <TextView
+        android:id="@+id/tv_here"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/guidie_01_text"
+        android:layout_centerHorizontal="true"
+        android:text="在这里"
+        android:textColor="@color/black"
+        android:textSize="26sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/guidie_01_text"
+        style="@style/tv_guide_introduction"
+        android:text="与星际爱好者一同跨越宇宙洪荒"
+        />
+
+</RelativeLayout>

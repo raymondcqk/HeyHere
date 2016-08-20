@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="48dp"
+              android:background="@color/colorPrimary"
+              android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/tab_discover"
+        style="@style/tab_item_layout">
+
+        <ImageView
+            android:id="@+id/img_tab_discover"
+            style="@style/img_tab"
+            android:src="@drawable/lookup"/>
+
+        <TextView
+            style="@style/tv_tab"
+            android:text="发现"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_care"
+        style="@style/tab_item_layout">
+
+        <ImageView
+            android:id="@+id/img_tab_care"
+            style="@style/img_tab"
+            android:src="@drawable/eye_open"/>
+
+        <TextView
+            style="@style/tv_tab"
+            android:text="关注"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_publish"
+        style="@style/tab_item_layout">
+
+        <ImageView
+            android:id="@+id/img_tab_publish"
+            style="@style/img_tab"
+            android:src="@drawable/ultra_ball_96px"/>
+
+        <TextView
+            style="@style/tv_tab"
+            android:text="发布"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_message"
+        style="@style/tab_item_layout">
+
+        <ImageView
+            android:id="@+id/img_tab_message"
+            style="@style/img_tab"
+            android:src="@drawable/conversation_96px"/>
+
+        <TextView
+            style="@style/tv_tab"
+            android:text="消息"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tab_user"
+        style="@style/tab_item_layout">
+
+        <ImageView
+            android:id="@+id/img_tab_user"
+            style="@style/img_tab"
+            android:src="@drawable/head_bear"/>
+
+        <TextView
+            style="@style/tv_tab"
+            android:text="我的"/>
+    </LinearLayout>
+</LinearLayout>

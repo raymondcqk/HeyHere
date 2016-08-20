@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_message_notification"
+        style="@style/message_fg_list_layout">
+
+        <ImageView
+            style="@style/message_fg_list_icon_left"
+            android:src="@drawable/notification_86px"/>
+
+        <TextView
+            style="@style/message_fg_list_text"
+            android:text="通知"/>
+
+        <ImageView
+            style="@style/message_fg_list_icon_right"
+            android:src="@drawable/next_96px"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray"></View>
+
+    <LinearLayout
+
+        android:id="@+id/layout_message_contact"
+        style="@style/message_fg_list_layout">
+
+        <ImageView
+            style="@style/message_fg_list_icon_left"
+            android:src="@drawable/group_127px"/>
+
+        <TextView
+            style="@style/message_fg_list_text"
+            android:text="@string/friend"/>
+
+        <ImageView
+            style="@style/message_fg_list_icon_right"
+            android:src="@drawable/next_96px"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray"></View>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_message_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/lv_item_bg_selector"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_marginLeft="5dp"
+            android:id="@+id/img_message_weather_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/weather_72px"/>
+
+        <TextView
+            android:id="@+id/tv_message_weather_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/img_message_weather_icon"
+            android:text="天气"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tv_message_weather_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img_message_weather_icon"
+            android:layout_alignLeft="@+id/tv_message_weather_title"
+            android:text="【番禺】 阵雨 26℃/29℃ 更新时间 11:17"
+            android:textSize="10sp"/>
+
+        <!--<ImageView-->
+            <!--android:id="@+id/img_message_weather_right"-->
+            <!--style="@style/message_fg_list_icon_right"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:src="@drawable/next_96px"/>-->
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray"></View>
+</LinearLayout>

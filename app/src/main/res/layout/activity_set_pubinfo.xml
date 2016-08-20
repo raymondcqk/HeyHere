@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray"
+              android:orientation="vertical"
+              android:padding="15dp">
+
+    <EditText
+        android:id="@+id/edt_orgnization"
+        style="@style/edt_get_info"
+        android:hint="please intput your orgnization"/>
+
+    <EditText
+        android:id="@+id/edt_publisher"
+        style="@style/edt_get_info"
+        android:hint="publisher's name"/>
+
+    <EditText
+        android:id="@+id/edt_pubdate"
+        style="@style/edt_get_info"
+        android:hint="the date of publish"/>
+
+    <EditText
+        android:id="@+id/edt_deadline"
+        style="@style/edt_get_info"
+        android:hint="deadline of the project"/>
+
+    <EditText
+        android:id="@+id/edt_project"
+        style="@style/edt_get_info"
+        android:hint="project's title"/>
+
+    <EditText
+        android:id="@+id/edt_brief"
+        style="@style/edt_get_info"
+        android:layout_weight="1"
+        android:height="0dp"
+        android:gravity="start"
+        android:layout_marginBottom="10dp"
+        android:hint="project's brief"/>
+
+
+    <Button
+        android:id="@+id/btn_add_publish_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="3dp"
+        android:layout_marginTop="5dp"
+        android:text="Commit"/>
+
+</LinearLayout>

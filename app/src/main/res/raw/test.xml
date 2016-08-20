@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<userinfo>
+    <user>
+        <phone>13610164743</phone>
+        <passwd>123123</passwd>
+        <logginstatus>false</logginstatus>
+    </user>
+    <user>
+        <phone>13610164742</phone>
+        <passwd>01478</passwd>
+        <logginstatus>true</logginstatus>
+    </user>
+    <user>
+        <phone>13610164745</phone>
+        <passwd>21304</passwd>
+        <logginstatus>false</logginstatus>
+    </user>
+</userinfo>
