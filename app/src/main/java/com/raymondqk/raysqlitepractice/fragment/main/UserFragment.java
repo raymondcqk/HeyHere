@@ -1,4 +1,4 @@
-package com.raymondqk.raysqlitepractice.fragment;
+package com.raymondqk.raysqlitepractice.fragment.main;
 
 import android.app.Fragment;
 import android.os.Bundle;

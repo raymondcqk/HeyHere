@@ -1,101 +1,148 @@
 package com.raymondqk.raysqlitepractice.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raymondqk.raysqlitepractice.R;
+import com.raymondqk.raysqlitepractice.fragment.main.MessageFragment;
 import com.raymondqk.raysqlitepractice.model.UserInfo;
-import com.raymondqk.raysqlitepractice.utils.SaxParseHandler;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
+import com.raymondqk.raysqlitepractice.model.weather.WeatherInfo;
+import com.raymondqk.raysqlitepractice.utils.FileUtils;
+import com.raymondqk.raysqlitepractice.utils.JSONUtils;
+import com.raymondqk.raysqlitepractice.utils.SharedPreferenceUtils;
+import com.raymondqk.raysqlitepractice.utils.VerifyPermissionUtils;
+import com.raymondqk.raysqlitepractice.utils.WeatherUtils;
+import com.raymondqk.raysqlitepractice.utils.XMLParseUtils;
+import com.raymondqk.raysqlitepractice.utils.db.DBHelper;
+import com.raymondqk.raysqlitepractice.utils.internet.HTTPUtils;
+import com.raymondqk.raysqlitepractice.utils.internet.HttpCallback;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Created by 陈其康 raymondchan on 2016/8/20 0020.
  */
-public class WeatherActivity extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String HTTP_HEAD = "http://";
     public static final String REQUEST_METHOD_GET = "GET";
     public static final int MSG_WHAT_UPDATE_TEST = 1;
+    public static final int MSG_WHAT_CITY_LIST = 2;
     public static final String DOWNLOAD_RESULT = "downloadResult";
-    private TextView mTest;
+    public static final String KEY_WEATHER_CITY_LIST = "weather_city_list";
+    public static final int REQUEST_CODE_SELECT_CITY = 10;
+    public static final int RESULT_CODE_SELECT_CITY = 10;
+    public static final int MSG_WHAT_UPDATE_CITY = 11;
+    public static final String KEY_RESPONSE = "key_response";
+    public static final String CITY_ID_GUANGZHOU = "CN101280101";
+    private TextView mTv_city;
+    private WeatherInfo mWeatherInfo;
+    /*基于消息的异步机制*/
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case MSG_WHAT_UPDATE_TEST:
-                    Bundle data = msg.getData();
-                    mTest.setText(data.getString(DOWNLOAD_RESULT));
+                case MSG_WHAT_UPDATE_CITY:
+                    mWeatherInfo = (WeatherInfo) msg.obj;
+                    if (mWeatherInfo != null) {
+                        mTv_city.setText(mWeatherInfo.getCity());
+                        mTv_climate.setText(mWeatherInfo.getTxt());
+                        mTv_tmp.setText(mWeatherInfo.getTmp());
+                        mTv_aqi.setText("空气质量指数: " + mWeatherInfo.getAqi());
+                        mTv_pm25.setText("PM2.5   " + mWeatherInfo.getPm25());
+                        mTv_qualty.setText(mWeatherInfo.getQlty());
+                        mTitle.setText("更新于" + mWeatherInfo.getLoc());
+                        mPb.setVisibility(View.GONE);
+                        SharedPreferenceUtils.putLastWeatherCity(mWeatherInfo.getId());
+
+                    } else {
+                        Toast.makeText(WeatherActivity.this, "所选择地区的数据炸了，切换至默认地区", Toast.LENGTH_SHORT).show();
+                        getWeather(CITY_ID_GUANGZHOU);
+                    }
                     break;
             }
         }
     };
+    private ImageButton mIb_select_city;
+    private ImageButton mIb_back;
+    private DBHelper mDbHelper;
+    private TextView mTv_climate;
+    private TextView mTv_tmp;
+    private TextView mTv_aqi;
+    private TextView mTv_pm25;
+    private TextView mTv_qualty;
+    private TextView mTitle;
+    private ProgressBar mPb;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_weather);
+        mDbHelper = DBHelper.getDBHelperInstance(this);
         initView();
-        //        new Thread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                httpTest();
-        //            }
-        //        }).start();
+
 
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        //网络请求
-        //        new HttpGetTast().execute();
+    }
 
-        //读取xml数据
-        String xmlStr = getXMLFromRaw();
+    private String getJSONDataFromAssets(String filename) {
+        try {
+            InputStream inputStream = getAssets().open(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder builder = new StringBuilder();
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                builder.append(line.trim());
+            }
+            return builder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        //sax解析xml结果处理
-        //        saxXmlResultTest(xmlStr);
-
-        //pull解析xml
-        parseXMLWithPull(xmlStr);
+    private void pullXMLResult(String xmlStr) {
+        //            userInfo = null;
+        List<UserInfo> userInfos = XMLParseUtils.parseXMLWithPull(xmlStr);
+        StringBuilder b = new StringBuilder();
+        for (UserInfo u : userInfos) {
+            b.append(u.toString() + "\n");
+        }
+        mTv_city.setText(b.toString());
     }
 
     private void saxXmlResultTest(String xmlStr) {
-        List<UserInfo> list = parseXMLWithSAX(xmlStr);
+        List<UserInfo> list = XMLParseUtils.parseXMLWithSAX(xmlStr);
         StringBuilder builder = new StringBuilder();
         builder.setLength(0);
         for (UserInfo userInfo : list) {
             builder.append(userInfo.toString() + "\n");
         }
-        mTest.setText(builder.toString());
+        mTv_city.setText(builder.toString());
     }
 
     private String getXMLFromRaw() {
@@ -116,54 +163,48 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        mTest = (TextView) findViewById(R.id.tv_weather_test);
-    }
+        mIb_select_city = (ImageButton) findViewById(R.id.ib_weather_city);
+        mIb_back = (ImageButton) findViewById(R.id.ib_weather_back);
+        mIb_select_city.setOnClickListener(this);
+        mIb_back.setOnClickListener(this);
 
+        mTv_city = (TextView) findViewById(R.id.tv_weather_city);
+        mTv_climate = (TextView) findViewById(R.id.tv_weather_climate);
+        mTv_tmp = (TextView) findViewById(R.id.tv_weather_tmp);
+        mTv_aqi = (TextView) findViewById(R.id.tv_weather_aqi);
+        mTv_qualty = (TextView) findViewById(R.id.tv_weather_qulity);
+        mTv_pm25 = (TextView) findViewById(R.id.tv_weather_pm25);
+        mTitle = (TextView) findViewById(R.id.tv_weather_toolbar_title);
 
-    private String httpTest() {
-        try {
-            //准备url
-            String website = "www.baidu.com";
-            URL url = new URL(HTTP_HEAD + website);
-            //打开网络http连接
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            //http请求 设置请求方式
-            connection.setRequestMethod(REQUEST_METHOD_GET);
-            //设置连接超时
-            connection.setConnectTimeout(8000);
-            //设置读取超时
-            connection.setReadTimeout(8000);
-            //开始读取数据
-            //获取服务器返回的输入流
-            InputStream in = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder builder = new StringBuilder();
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                builder.append(line + "\n");
-            }
-            /*使用handler的基于消息的异步处理*/
-            //            Message message = Message.obtain();
-            //            message.what = MSG_WHAT_UPDATE_TEST;
-            //            Bundle data = new Bundle();
-            //            data.putString(DOWNLOAD_RESULT, builder.toString());
-            //            message.setData(data);
-            //            mHandler.sendMessage(message);
-
-            //关闭http连接
-            connection.disconnect();
-            return builder.toString();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        mPb = (ProgressBar) findViewById(R.id.pb_weather);
+        SharedPreferenceUtils.getSharedPreferencesInstance(WeatherActivity.this);
+        String id = SharedPreferenceUtils.getWeatherCity();
+        if (id != null) {
+            getWeather(id);
+        } else {
+            getWeather(CITY_ID_GUANGZHOU);
         }
-        return null;
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ib_weather_back:
+                onBackPressed();
+                break;
+            case R.id.ib_weather_city:
+                Intent city_intent = new Intent(WeatherActivity.this, SelectCityActivity.class);
+                startActivityForResult(city_intent, REQUEST_CODE_SELECT_CITY);
+                break;
+        }
     }
 
 
-    class HttpGetTast extends AsyncTask<Void, Integer, String> {
+    /**
+     * AsyncTask方式的异步操作
+     */
+    class HttpGetTask extends AsyncTask<Void, Integer, String> {
 
         /**
          * 主线程，初始化ui
@@ -172,7 +213,7 @@ public class WeatherActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            mTest.setText("onPreExecute() -- 准备get");
+            mTv_city.setText("onPreExecute() -- 准备get");
 
         }
 
@@ -194,7 +235,17 @@ public class WeatherActivity extends AppCompatActivity {
                 progress++;
                 publishProgress(progress);
             }
-            return httpTest();
+            return HTTPUtils.getHTTPTest("www.zhihu.com", new HttpCallback() {
+                @Override
+                public void onFinish(String respones) {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
         }
 
         /**
@@ -206,7 +257,7 @@ public class WeatherActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             //此处记得：返回的进度参数为数组
-            mTest.setText(values[0] + "%");
+            mTv_city.setText(values[0] + "%");
         }
 
         /**
@@ -217,92 +268,61 @@ public class WeatherActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            mTest.setText(s);
+            mTv_city.setText(s);
         }
     }
 
-    /**
-     * SAX解析xml文件
-     * 主题处理部分在自创建的handler类
-     */
-    private List<UserInfo> parseXMLWithSAX(String xmlData) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        /*通过SAX的工厂获得SAXParser对象，从而获得xmlReader对象。*/
-        /*给XMLReader设置其解析xml节点的handler*/
-        /*最后把xml文件中读到的数据字符串给xmlReader解析即可*/
-        try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            XMLReader xmlReader = factory.newSAXParser().getXMLReader();
-            SaxParseHandler handler = new SaxParseHandler();
-            xmlReader.setContentHandler(handler);
-            xmlReader.parse(new InputSource(new StringReader(xmlData)));
-            List<UserInfo> list = handler.getList();
-            return list;
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
-    /**
-     * 通过pull解析xml
-     * @param xmlData
-     * @return
-     */
-    private List<UserInfo> parseXMLWithPull(String xmlData) {
-        UserInfo userInfo = new UserInfo();
-        List<UserInfo> userInfos = new ArrayList<UserInfo>();
-        try {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            XmlPullParser xmlPullParser = factory.newPullParser();
-            xmlPullParser.setInput(new StringReader(xmlData));
-            //数据装载完毕，开始进行解析
-            int eventType = xmlPullParser.getEventType();
-            while (eventType != xmlPullParser.END_DOCUMENT) {
-                String nodeName = xmlPullParser.getName();
-                switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        if ("user".equals(nodeName)) {
-                            Log.i("xmlTest", "开始解析User");
-                            userInfo = new UserInfo();
-                        }
-                        if ("phone".equals(nodeName)) {
-                            userInfo.setPhone(xmlPullParser.nextText());
-                            Log.i("xmlTest", userInfo.getPhone());
-                        } else if ("passwd".equals(nodeName)) {
-                            userInfo.setPasswd(xmlPullParser.nextText());
-                            Log.i("xmlTest", userInfo.getPasswd());
-                        } else if ("logginstatus".equals(nodeName)) {
-                            userInfo.setLogging(Boolean.parseBoolean(xmlPullParser.nextText()));
-                            Log.i("xmlTest", userInfo.isLogging() ? "true" : "false");
-                        }
-                        break;
-                    case XmlPullParser.END_TAG:
-                        if (nodeName.equals("user")) {
-                            Log.i("xmlTest", userInfo.toString());
-                            userInfos.add(userInfo);
-                        }
-                        break;
-                }
-                eventType = xmlPullParser.next();
-            }
-            //            userInfo = null;
-            StringBuilder b = new StringBuilder();
-            for (UserInfo u : userInfos) {
-                b.append(u.toString() + "\n");
-            }
-            mTest.setText(b.toString());
+    private void writeJsonFile(String data) {
+        VerifyPermissionUtils.verifyStoragePermission(WeatherActivity.this);
+        String filename = "json.txt";
+        FileUtils fileUtils = new FileUtils(WeatherActivity.this);
+        fileUtils.createFile(data, filename);
+    }
 
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            String city = data.getStringExtra(SelectCityActivity.SELECTED_CITY);
+            mTv_city.setText(city);
+            String cityId = mDbHelper.getCityIdByCity(city);
+            if (cityId == null)
+                return;
+            getWeather(cityId);
         }
-        return null;
+
+    }
+
+    private void getWeather(String cityId) {
+        mPb.setVisibility(View.VISIBLE);
+        WeatherUtils.getWeatherInfoJson(cityId, new HttpCallback() {
+            @Override
+            public void onFinish(String respones) {
+                WeatherInfo weatherInfo = JSONUtils.parseWeatherInfoFromJSONWithGSON(respones);
+                Message msg = Message.obtain();
+                msg.what = MSG_WHAT_UPDATE_CITY;
+                msg.obj = weatherInfo;
+                mHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(MessageFragment.WEATHER_RESULT, mWeatherInfo);
+        setResult(MessageFragment.RESULT_CODE_WEATHER, intent);
+        super.onBackPressed();
     }
 }

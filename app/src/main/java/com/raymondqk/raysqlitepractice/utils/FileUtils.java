@@ -28,8 +28,6 @@ public class FileUtils {
     private File appExternalDir;
 
 
-
-
     public FileUtils(Activity activity) {
         externalFile = Environment.getExternalStorageDirectory();
         externalPath = Environment.getExternalStorageDirectory().getAbsoluteFile();
@@ -44,6 +42,8 @@ public class FileUtils {
             } else {
                 Log.e(TAG, appExternalDir.getAbsolutePath() + " 文件夹创建失败");
             }
+        } else {
+            Log.i(TAG, appExternalDir.getAbsolutePath() + " ishere文件夹已存在");
         }
     }
 
@@ -93,6 +93,45 @@ public class FileUtils {
             }
         }
         //                return false;
+    }
+
+    public void createFile(String data, String filename) {
+        File file = new File(appExternalDir, filename);
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    Log.i(TAG, filename + " 创建成功！");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, filename + " 创建失败！");
+                //                        return false;
+            }
+        }
+        //写入数据
+        FileOutputStream out = null;
+        OutputStreamWriter writer = null;
+        try {
+            out = new FileOutputStream(file, false);
+            writer = new OutputStreamWriter(out);
+            //            writer = new BufferedWriter(new OutputStreamWriter(out));
+            writer.write(data);
+            Log.i(TAG, filename + " 写入完成！");
+            //                    return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            //                    return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
 

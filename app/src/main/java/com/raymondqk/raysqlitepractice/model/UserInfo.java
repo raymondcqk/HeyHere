@@ -1,11 +1,16 @@
 package com.raymondqk.raysqlitepractice.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by 陈其康 raymondchan on 2016/8/13 0013.
  */
 public class UserInfo {
+    @SerializedName("phone")
     private String phone;
+    @SerializedName("passwd")
     private String passwd;
+    @SerializedName("status")
     private boolean isLogging;
 
     public String getPhone() {
@@ -34,6 +39,6 @@ public class UserInfo {
 
     @Override
     public String toString() {
-        return "[ phone: " + getPhone() + " | " + "passwd: " + getPasswd() + " | " + "logginStatus: " + isLogging() + " ] ";
+        return " phone: " + getPhone() + " \n " + "passwd: " + getPasswd() + " \n" + "logginStatus: " + isLogging() + " \n--------\n";
     }
 }

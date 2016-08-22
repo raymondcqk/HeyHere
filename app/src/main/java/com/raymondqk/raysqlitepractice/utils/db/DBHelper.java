@@ -9,8 +9,12 @@ import android.util.Log;
 
 import com.raymondqk.raysqlitepractice.activity.SetPubInfoActivity;
 import com.raymondqk.raysqlitepractice.model.PubInfo;
+import com.raymondqk.raysqlitepractice.model.weather.CityInfo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by 陈其康 raymondchan on 2016/8/11 0011.
@@ -27,12 +31,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_USERINFO = "Userinfo";
     public static final String COLUMN_BRIEF = "brief";
-    public static final String COLUMN_ID = "id";
+
     public static final String COLUMN_PHONE = "phone";
     public static final String COLUMN_PASSWD = "passwd";
     public static final String COLUMN_LOGINSTATE = "loging_status";
 
     public static final String DB_NAME = "Project.db";
+    public static final String CREATE_TABLE = "create table ";
+    public static final String TABLE_CITY = "City";
+    public static final String COLUMN_WEATHER_CITY_ID = "city_id";
+    public static final String COLUMN_WEATHER_CITY = "city";
+    public static final String COLUMN_WEATHER_CNTY = "cnty";
+    public static final String COLUMN_WEATHER_PROV = "prov";
 
     private SQLiteDatabase mDatabase;
     private static DBHelper mDBHelper;
@@ -57,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //建表
         db.execSQL("create table " + TABLE_PUBLISHER + "(" +
-                COLUMN_ID + " integer primary key autoincrement," +
+                "id integer primary key autoincrement," +
                 COLUMN_ORGNIZATION + " text," +
                 COLUMN_PUBLISHER + " text," +
                 COLUMN_PUBDATE + " integer," +
@@ -66,12 +76,20 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_BRIEF + " text)");
         Log.i(SetPubInfoActivity.TAG_TEST, TABLE_PUBLISHER + " table created");
 
-        db.execSQL("create table " + TABLE_USERINFO + "(" +
+        db.execSQL(CREATE_TABLE + TABLE_USERINFO + "(" +
                 "id integer primary key autoincrement," +
                 COLUMN_PHONE + " text," +
                 COLUMN_PASSWD + " text," +
                 COLUMN_LOGINSTATE + " integer)");
         Log.i(SetPubInfoActivity.TAG_TEST, TABLE_USERINFO + " table created");
+
+        db.execSQL(CREATE_TABLE + TABLE_CITY + "(" +
+                "id integer primary key autoincrement," +
+                COLUMN_WEATHER_CITY + " text," +
+                COLUMN_WEATHER_CNTY + " text," +
+                COLUMN_WEATHER_CITY_ID + " text," +
+                COLUMN_WEATHER_PROV + " text )");
+        Log.i(SetPubInfoActivity.TAG_TEST, TABLE_CITY + " table created");
     }
 
     /**
@@ -297,5 +315,57 @@ public class DBHelper extends SQLiteOpenHelper {
     public void closeDB() {
         mDatabase.close();
         mDBHelper.close();
+    }
+
+    public boolean initCityTable(List<CityInfo> cityInfos) {
+        for (CityInfo city : cityInfos) {
+            ContentValues cv = new ContentValues();
+            cv.put(COLUMN_WEATHER_CITY, city.getCity());
+            cv.put(COLUMN_WEATHER_CNTY, city.getCnty());
+            cv.put(COLUMN_WEATHER_CITY_ID, city.getId());
+            cv.put(COLUMN_WEATHER_PROV, city.getProv());
+            mDatabase.insert(TABLE_CITY, null, cv);
+        }
+        Log.i("test", "城市数据录入成功");
+        return true;
+
+    }
+
+    /**
+     * 查询数据库里面的城市表的省份
+     *
+     * @return
+     */
+    public Set<String> queryProvince() {
+
+        Set<String> provs = new HashSet<>();
+        Cursor cursor = mDatabase.query(TABLE_CITY, new String[]{COLUMN_WEATHER_PROV}, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                provs.add(cursor.getString(cursor.getColumnIndex(COLUMN_WEATHER_PROV)));
+            } while (cursor.moveToNext());
+        }
+        return provs;
+
+    }
+
+    public List<String> queryCity(String prov) {
+        List<String> citys = new ArrayList<String>();
+        Cursor cursor = mDatabase.query(TABLE_CITY, new String[]{COLUMN_WEATHER_CITY}, COLUMN_WEATHER_PROV + "=?", new String[]{prov}, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                citys.add(cursor.getString(cursor.getColumnIndex(COLUMN_WEATHER_CITY)));
+            } while (cursor.moveToNext());
+        }
+        return citys;
+    }
+
+    public String getCityIdByCity(String city) {
+        String cityId = null;
+        Cursor cursor = mDatabase.query(TABLE_CITY, new String[]{COLUMN_WEATHER_CITY_ID}, COLUMN_WEATHER_CITY + "=?", new String[]{city}, null, null, null);
+        if (cursor.moveToFirst()) {
+            cityId = cursor.getString(cursor.getColumnIndex(COLUMN_WEATHER_CITY_ID));
+        }
+        return cityId;
     }
 }

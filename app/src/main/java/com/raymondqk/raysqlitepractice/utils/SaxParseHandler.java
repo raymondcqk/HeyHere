@@ -42,7 +42,6 @@ public class SaxParseHandler extends DefaultHandler {
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
 
-
         String string = new String(ch, start, length);
         if (TextUtils.equals(nodeName, "phone")) {
             Log.i(TAG, "解析 phone: " + string);

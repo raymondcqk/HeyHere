@@ -16,11 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.raymondqk.raysqlitepractice.R;
-import com.raymondqk.raysqlitepractice.fragment.CareFragment;
-import com.raymondqk.raysqlitepractice.fragment.DiscoverFragment;
-import com.raymondqk.raysqlitepractice.fragment.MessageFragment;
-import com.raymondqk.raysqlitepractice.fragment.PublishFragment;
-import com.raymondqk.raysqlitepractice.fragment.UserFragment;
+import com.raymondqk.raysqlitepractice.fragment.main.CareFragment;
+import com.raymondqk.raysqlitepractice.fragment.main.DiscoverFragment;
+import com.raymondqk.raysqlitepractice.fragment.main.MessageFragment;
+import com.raymondqk.raysqlitepractice.fragment.main.PublishFragment;
+import com.raymondqk.raysqlitepractice.fragment.main.UserFragment;
 import com.raymondqk.raysqlitepractice.interfaces.DiscoverFgListener;
 import com.raymondqk.raysqlitepractice.interfaces.PublishFgListener;
 import com.raymondqk.raysqlitepractice.model.PubInfo;

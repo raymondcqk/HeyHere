@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
  */
 public class SharedPreferenceUtils {
 
+    public static final String CITY_ID = "cityId";
+    public static final String WEATHERBREF = "weatherbref";
     private Context mContext;
     private static SharedPreferences mSharedPreferences;
     public final static String SP_NAME = "com.raymondcqk.here";
@@ -73,4 +75,40 @@ public class SharedPreferenceUtils {
         return mSharedPreferences.getBoolean(key, true);
     }
 
+    /**
+     * 记录最后的天气城市
+     *
+     * @param cityId
+     */
+    public static void putLastWeatherCity(String cityId) {
+        mEditor.putString(CITY_ID, cityId);
+        mEditor.commit();
+    }
+
+    /**
+     * 读取最后的天气城市
+     *
+     * @return
+     */
+    public static String getWeatherCity() {
+        return mSharedPreferences.getString(CITY_ID, null);
+    }
+
+    /**
+     * 记录最后的天气摘要
+     *
+     * @param bref
+     */
+    public static void putLastWeatherBref(String bref) {
+        mEditor.putString(WEATHERBREF, bref);
+        mEditor.commit();
+    }
+
+    /**
+     * 读取最后的天气摘要
+     * @return
+     */
+    public static String getWeatherBref() {
+        return mSharedPreferences.getString(WEATHERBREF, "暂无天气数据，请点击更新");
+    }
 }
