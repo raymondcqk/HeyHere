@@ -2,7 +2,10 @@ package com.raymondqk.raysqlitepractice.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +13,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -25,6 +29,7 @@ import com.raymondqk.raysqlitepractice.interfaces.DBCallback;
 import com.raymondqk.raysqlitepractice.interfaces.FragmentViewCallback;
 import com.raymondqk.raysqlitepractice.model.UserInfo;
 import com.raymondqk.raysqlitepractice.model.weather.WeatherInfo;
+import com.raymondqk.raysqlitepractice.service.WeatherService;
 import com.raymondqk.raysqlitepractice.utils.FileUtils;
 import com.raymondqk.raysqlitepractice.utils.JSONUtils;
 import com.raymondqk.raysqlitepractice.utils.SharedPreferenceUtils;
@@ -62,6 +67,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public static final int MSG_WHAT_CACHE_INSERTED = 44;
     public static final int MSG_WHAT_ONLINE_UPDATE = 55;
     public static final int ARG_ONLINE = 1;
+    public static final String ACTION_COM_RAYMONDCQK_WEATHER_TIME = "com.raymondcqk.weather_time";
+    public static final String KEY_TIME_WEATHER = "time_weather";
+    public static final int ARG_FROMDB = 2;
     private TextView mTv_city;
     private WeatherInfo mWeatherInfo;
     private ImageButton mIb_select_city;
@@ -104,8 +112,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                             mTitle.setText("更新于" + mWeatherInfo.getLoc());
                             mPb.setVisibility(View.GONE);
                             //                        mCuttent_city_id = mWeatherInfo.getId();
-                            SharedPreferenceUtils.putLastWeatherCity(mWeatherInfo.getId());
-                            insertCurrentWeatherToDB(mWeatherInfo);
+                            // TODO: 2016/8/24 0024 给Message添加一个arg，判断当前天气数据是否从数据缓存获取，若是，则不做数据插入工作
+                            if (msg.arg2 == ARG_FROMDB) {
+
+                            } else {
+                                SharedPreferenceUtils.putLastWeatherCity(mWeatherInfo.getId());
+                                insertCurrentWeatherToDB(mWeatherInfo);
+                            }
                             if (msg.arg1 == ARG_ONLINE) {
                                 Toast.makeText(WeatherActivity.this, "已同步更新", Toast.LENGTH_SHORT).show();
                             }
@@ -131,6 +144,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     };
+    private WeatherReceiver mReceiver;
+    private Intent mService_intent;
+    private IntentFilter mIntentFilter;
+
+    @Override
+    protected void onDestroy() {
+        stopService(mService_intent);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(mReceiver);
+        super.onPause();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,11 +167,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_weather);
         mDbHelper = DBHelper.getDBHelperInstance(this);
         initView();
+
+        mReceiver = new WeatherReceiver();
+        mIntentFilter = new IntentFilter(ACTION_COM_RAYMONDCQK_WEATHER_TIME);
+
+        mService_intent = new Intent(this, WeatherService.class);
+        startService(mService_intent);
     }
 
 
     @Override
     protected void onResume() {
+        registerReceiver(mReceiver, mIntentFilter);
         super.onResume();
     }
 
@@ -165,6 +200,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     /**
      * 将当前天气数据插入数据库，作为缓存
+     *
      * @param weatherInfo
      */
     private void insertCurrentWeatherToDB(WeatherInfo weatherInfo) {
@@ -178,8 +214,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         };
-        ProviderUtils.insertCurrentWeather(this,weatherInfo,insertCurrentWeatherCallback);
-//        mDbHelper.insertCurrentWeather(weatherInfo,insertCurrentWeatherCallback );
+        ProviderUtils.insertCurrentWeather(this, weatherInfo, insertCurrentWeatherCallback);
+        //        mDbHelper.insertCurrentWeather(weatherInfo,insertCurrentWeatherCallback );
     }
 
     private void pullXMLResult(String xmlStr) {
@@ -240,9 +276,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         SharedPreferenceUtils.getSharedPreferencesInstance(WeatherActivity.this);
         mCuttent_city_id = SharedPreferenceUtils.getWeatherCity();
         if (mCuttent_city_id != null) {
-            Toast.makeText(WeatherActivity.this, "当前使用缓存,点击“更新时间”强制刷新", Toast.LENGTH_SHORT).show();
             //若sp中存有id，则代表天气数据缓存也有了，读取缓存，而非立刻网络请求，网络请求时强制刷新或定时刷新才用
             getWeatherFromDB();
+            Toast.makeText(WeatherActivity.this, "当前使用缓存,点击“更新时间”强制刷新", Toast.LENGTH_SHORT).show();
         } else {
             //通过网络获取广州天气
             getWeather(CITY_ID_GUANGZHOU);
@@ -252,7 +288,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void getWeatherFromDB() {
-        ProviderUtils.getCurrentWeatherInfo(this,new DBCallback() {
+        ProviderUtils.getCurrentWeatherInfo(this, new DBCallback() {
             @Override
             public void onFinished(Boolean isOk, Object object) {
                 if (isOk) {
@@ -260,6 +296,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     Message msg = Message.obtain();
                     msg.what = MSG_WHAT_UPDATE_CITY;
                     msg.obj = mWeatherInfo;
+                    msg.arg2 = ARG_FROMDB;
                     mHandler.sendMessage(msg);
                 }
             }
@@ -454,5 +491,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         intent.putExtra(MessageFragment.WEATHER_RESULT, mWeatherInfo);
         setResult(MessageFragment.RESULT_CODE_WEATHER, intent);
         super.onBackPressed();
+    }
+
+    class WeatherReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (TextUtils.equals(intent.getAction(), ACTION_COM_RAYMONDCQK_WEATHER_TIME)) {
+                getWeatherFromDB();
+                Toast.makeText(context, "后台自动更新", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

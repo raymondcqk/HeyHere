@@ -35,6 +35,7 @@
         <provider
             android:name="com.raymondqk.raysqlitepractice.utils.provider.WeatherProvider"
             android:authorities="com.raymondcqk.ishere.provider"></provider>
+        <service android:name=".service.WeatherService"/>
     </application>
 
 
