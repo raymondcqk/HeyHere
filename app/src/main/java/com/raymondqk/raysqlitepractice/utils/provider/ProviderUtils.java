@@ -42,6 +42,7 @@ public class ProviderUtils {
                 context.getContentResolver().insert(uri, cv);
                 cv.clear();
                 uri = Uri.parse("content://" + AUTHORITY + "/tableWeatherDaily");
+                context.getContentResolver().delete(uri,null,null);
                 for (DailyForecast day : weatherInfo.getDailyForecastList()) {
                     cv.put(DBHelper.COLUMN_WEATHER_DAILY_SR, day.getSr());
                     cv.put(DBHelper.COLUMN_WEATHER_DAILY_SS, day.getSs());
@@ -64,7 +65,6 @@ public class ProviderUtils {
                 callback.onFinished(true, null);
             }
         }).start();
-
     }
 
     public static void getCurrentWeatherInfo(final Context context, final DBCallback callback) {

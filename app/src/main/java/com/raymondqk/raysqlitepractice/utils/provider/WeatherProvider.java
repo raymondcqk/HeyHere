@@ -151,7 +151,6 @@ public class WeatherProvider extends ContentProvider {
             case WEATHERINFO_DAILY:
                 db.beginTransaction();
                 try {
-                    db.delete(DBHelper.TABLE_DAILY_WEATHER, null, null);
                     long weatherDailyId = db.insert(DBHelper.TABLE_DAILY_WEATHER, null, values);
                     uriReturn = Uri.parse("content://" + AUTHORITY + "/" + DBHelper.TABLE_DAILY_WEATHER + "/" + weatherDailyId);
                     db.setTransactionSuccessful();
@@ -175,6 +174,12 @@ public class WeatherProvider extends ContentProvider {
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = mDbHelper.getDBInstance();
+        switch (sUriMatcher.match(uri)){
+            case WEATHERINFO_DAILY:
+                db.delete(DBHelper.TABLE_DAILY_WEATHER, null, null);
+                break;
+        }
         return 0;
     }
 
