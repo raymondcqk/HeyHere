@@ -6,22 +6,22 @@ import java.io.Serializable;
  * Created by 陈其康 raymondchan on 2016/8/22 0022.
  */
 public class DailyForecast implements Serializable{
-    private String sr;
-    private String ss;
-    private String txt_d;
-    private String txt_n;
-    private String date;
-    private String hum;
+    private String sr;//日升
+    private String ss;//日落
+    private String txt_d;//白天气候 多云
+    private String txt_n;//晚上气候
+    private String date;//日期
+    private String hum;//湿度
     private String pcpn;
     private String pop;
-    private String pres;
-    private String max;
-    private String min;
-    private String vis;
-    private String deg;
-    private String dir;
-    private String sc;
-    private String spd;
+    private String pres;//气压
+    private String max;//最高温度
+    private String min;//最低温度
+    private String vis;//能见度
+    private String deg;//风速级别
+    private String dir;//风向
+    private String sc;//风描述
+    private String spd;//风速
 
     @Override
     public String toString() {

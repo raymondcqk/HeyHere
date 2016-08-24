@@ -16,7 +16,7 @@ import com.raymondqk.raysqlitepractice.fragment.cityselect.ProvinceFragment;
 import com.raymondqk.raysqlitepractice.interfaces.LocationSelectedCallback;
 import com.raymondqk.raysqlitepractice.model.weather.CityInfo;
 import com.raymondqk.raysqlitepractice.utils.JSONUtils;
-import com.raymondqk.raysqlitepractice.utils.WeatherUtils;
+import com.raymondqk.raysqlitepractice.utils.internet.WeatherUtils;
 import com.raymondqk.raysqlitepractice.utils.db.DBHelper;
 import com.raymondqk.raysqlitepractice.utils.internet.HttpCallback;
 import com.raymondqk.raysqlitepractice.utils.internet.InternetUtils;

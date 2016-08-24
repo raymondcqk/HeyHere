@@ -1,6 +1,4 @@
-package com.raymondqk.raysqlitepractice.utils;
-
-import com.raymondqk.raysqlitepractice.utils.internet.HttpCallback;
+package com.raymondqk.raysqlitepractice.utils.internet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +36,11 @@ public class WeatherUtils {
 
     }
 
+    /**
+     * 根据id，读取城市天气 json
+     * @param cityId
+     * @param callback
+     */
     public static void getWeatherInfoJson(final String cityId, final HttpCallback callback) {
         new Thread(new Runnable() {
             @Override

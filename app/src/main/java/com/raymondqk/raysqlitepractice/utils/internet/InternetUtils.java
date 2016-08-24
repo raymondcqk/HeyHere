@@ -53,10 +53,10 @@ public class InternetUtils {
         if (InternetUtils.isNetworkConnected(context)) {
             switch (InternetUtils.checkConnetedType(context)) {
                 case ConnectivityManager.TYPE_WIFI:
-                    Toast.makeText(context, "当前网络：WIFI", Toast.LENGTH_SHORT).show();
+                    //                    Toast.makeText(context, "当前网络：WIFI", Toast.LENGTH_SHORT).show();
                     break;
                 case ConnectivityManager.TYPE_MOBILE:
-                    Toast.makeText(context, "当前网络:移动网络", Toast.LENGTH_SHORT).show();
+                    //                    Toast.makeText(context, "当前网络:移动网络", Toast.LENGTH_SHORT).show();
                     break;
             }
             return true;

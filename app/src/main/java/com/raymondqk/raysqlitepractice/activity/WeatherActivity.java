@@ -1,5 +1,7 @@
 package com.raymondqk.raysqlitepractice.activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,17 +20,22 @@ import android.widget.Toast;
 
 import com.raymondqk.raysqlitepractice.R;
 import com.raymondqk.raysqlitepractice.fragment.main.MessageFragment;
+import com.raymondqk.raysqlitepractice.fragment.weather.DailyFragment;
+import com.raymondqk.raysqlitepractice.interfaces.DBCallback;
+import com.raymondqk.raysqlitepractice.interfaces.FragmentViewCallback;
 import com.raymondqk.raysqlitepractice.model.UserInfo;
 import com.raymondqk.raysqlitepractice.model.weather.WeatherInfo;
 import com.raymondqk.raysqlitepractice.utils.FileUtils;
 import com.raymondqk.raysqlitepractice.utils.JSONUtils;
 import com.raymondqk.raysqlitepractice.utils.SharedPreferenceUtils;
 import com.raymondqk.raysqlitepractice.utils.VerifyPermissionUtils;
-import com.raymondqk.raysqlitepractice.utils.WeatherUtils;
+import com.raymondqk.raysqlitepractice.utils.internet.InternetUtils;
+import com.raymondqk.raysqlitepractice.utils.internet.WeatherUtils;
 import com.raymondqk.raysqlitepractice.utils.XMLParseUtils;
 import com.raymondqk.raysqlitepractice.utils.db.DBHelper;
 import com.raymondqk.raysqlitepractice.utils.internet.HTTPUtils;
 import com.raymondqk.raysqlitepractice.utils.internet.HttpCallback;
+import com.raymondqk.raysqlitepractice.utils.provider.ProviderUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,34 +59,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public static final int MSG_WHAT_UPDATE_CITY = 11;
     public static final String KEY_RESPONSE = "key_response";
     public static final String CITY_ID_GUANGZHOU = "CN101280101";
+    public static final int MSG_WHAT_CACHE_INSERTED = 44;
+    public static final int MSG_WHAT_ONLINE_UPDATE = 55;
+    public static final int ARG_ONLINE = 1;
     private TextView mTv_city;
     private WeatherInfo mWeatherInfo;
-    /*基于消息的异步机制*/
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_WHAT_UPDATE_CITY:
-                    mWeatherInfo = (WeatherInfo) msg.obj;
-                    if (mWeatherInfo != null) {
-                        mTv_city.setText(mWeatherInfo.getCity());
-                        mTv_climate.setText(mWeatherInfo.getTxt());
-                        mTv_tmp.setText(mWeatherInfo.getTmp());
-                        mTv_aqi.setText("空气质量指数: " + mWeatherInfo.getAqi());
-                        mTv_pm25.setText("PM2.5   " + mWeatherInfo.getPm25());
-                        mTv_qualty.setText(mWeatherInfo.getQlty());
-                        mTitle.setText("更新于" + mWeatherInfo.getLoc());
-                        mPb.setVisibility(View.GONE);
-                        SharedPreferenceUtils.putLastWeatherCity(mWeatherInfo.getId());
-
-                    } else {
-                        Toast.makeText(WeatherActivity.this, "所选择地区的数据炸了，切换至默认地区", Toast.LENGTH_SHORT).show();
-                        getWeather(CITY_ID_GUANGZHOU);
-                    }
-                    break;
-            }
-        }
-    };
     private ImageButton mIb_select_city;
     private ImageButton mIb_back;
     private DBHelper mDbHelper;
@@ -90,7 +74,63 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TextView mTv_qualty;
     private TextView mTitle;
     private ProgressBar mPb;
+    private DailyFragment mDailyFragment;
+    private FragmentViewCallback mDailyFgCallback;
+    private TextView mTv_updateTime;
+    private String mCuttent_city_id;
 
+    /*基于消息的异步机制*/
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_WHAT_UPDATE_CITY:
+                    if (InternetUtils.checkConnected(WeatherActivity.this)) {
+                        mWeatherInfo = (WeatherInfo) msg.obj;
+                        if (mWeatherInfo != null) {
+                            if (mDailyFragment == null) {
+                                //初始化7天预报fg
+                                initDailyVpFragment();
+                            } else {
+                                //更新7预报fg数据
+                                updateDaily();
+                            }
+                            mTv_city.setText(mWeatherInfo.getCity());
+                            mTv_climate.setText(mWeatherInfo.getTxt());
+                            mTv_tmp.setText(mWeatherInfo.getTmp());
+                            mTv_aqi.setText("空气质量指数: " + mWeatherInfo.getAqi());
+                            mTv_pm25.setText("PM2.5   " + mWeatherInfo.getPm25());
+                            mTv_qualty.setText(mWeatherInfo.getQlty());
+                            mTitle.setText("更新于" + mWeatherInfo.getLoc());
+                            mPb.setVisibility(View.GONE);
+                            //                        mCuttent_city_id = mWeatherInfo.getId();
+                            SharedPreferenceUtils.putLastWeatherCity(mWeatherInfo.getId());
+                            insertCurrentWeatherToDB(mWeatherInfo);
+                            if (msg.arg1 == ARG_ONLINE) {
+                                Toast.makeText(WeatherActivity.this, "已同步更新", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(WeatherActivity.this, "所选择地区的数据炸了，切换至默认地区", Toast.LENGTH_SHORT).show();
+                            getWeather(CITY_ID_GUANGZHOU);
+                        }
+                    } else {
+                        //                        Toast.makeText(WeatherActivity.this, "当前无可用网络", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case MSG_WHAT_CACHE_INSERTED:
+                    if (InternetUtils.checkConnected(WeatherActivity.this)) {
+                        //                        Toast.makeText(WeatherActivity.this, "已更新", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(WeatherActivity.this, "当前无可用网络，使用缓存数据", Toast.LENGTH_SHORT).show();
+                    }
+
+                    break;
+                case MSG_WHAT_ONLINE_UPDATE:
+                    Toast.makeText(WeatherActivity.this, "已同步更新", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,8 +139,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_weather);
         mDbHelper = DBHelper.getDBHelperInstance(this);
         initView();
-
-
     }
 
 
@@ -123,6 +161,25 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 将当前天气数据插入数据库，作为缓存
+     * @param weatherInfo
+     */
+    private void insertCurrentWeatherToDB(WeatherInfo weatherInfo) {
+        DBCallback insertCurrentWeatherCallback = new DBCallback() {
+            @Override
+            public void onFinished(Boolean isOk, Object object) {
+                if (isOk) {
+                    Message msg = Message.obtain();
+                    msg.what = MSG_WHAT_CACHE_INSERTED;
+                    mHandler.sendMessage(msg);
+                }
+            }
+        };
+        ProviderUtils.insertCurrentWeather(this,weatherInfo,insertCurrentWeatherCallback);
+//        mDbHelper.insertCurrentWeather(weatherInfo,insertCurrentWeatherCallback );
     }
 
     private void pullXMLResult(String xmlStr) {
@@ -163,6 +220,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initView() {
+        mTv_updateTime = (TextView) findViewById(R.id.tv_weather_toolbar_title);
+        mTv_updateTime.setOnClickListener(this);
+
         mIb_select_city = (ImageButton) findViewById(R.id.ib_weather_city);
         mIb_back = (ImageButton) findViewById(R.id.ib_weather_back);
         mIb_select_city.setOnClickListener(this);
@@ -178,12 +238,72 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         mPb = (ProgressBar) findViewById(R.id.pb_weather);
         SharedPreferenceUtils.getSharedPreferencesInstance(WeatherActivity.this);
-        String id = SharedPreferenceUtils.getWeatherCity();
-        if (id != null) {
-            getWeather(id);
+        mCuttent_city_id = SharedPreferenceUtils.getWeatherCity();
+        if (mCuttent_city_id != null) {
+            Toast.makeText(WeatherActivity.this, "当前使用缓存,点击“更新时间”强制刷新", Toast.LENGTH_SHORT).show();
+            //若sp中存有id，则代表天气数据缓存也有了，读取缓存，而非立刻网络请求，网络请求时强制刷新或定时刷新才用
+            getWeatherFromDB();
         } else {
+            //通过网络获取广州天气
             getWeather(CITY_ID_GUANGZHOU);
         }
+
+
+    }
+
+    private void getWeatherFromDB() {
+        ProviderUtils.getCurrentWeatherInfo(this,new DBCallback() {
+            @Override
+            public void onFinished(Boolean isOk, Object object) {
+                if (isOk) {
+                    mWeatherInfo = (WeatherInfo) object;
+                    Message msg = Message.obtain();
+                    msg.what = MSG_WHAT_UPDATE_CITY;
+                    msg.obj = mWeatherInfo;
+                    mHandler.sendMessage(msg);
+                }
+            }
+        });
+        //            mDbHelper.getCurrentWeatherInfo(new DBCallback() {
+        //                @Override
+        //                public void onFinished(Boolean isOk, Object object) {
+        //                    if (isOk) {
+        //                        mWeatherInfo = (WeatherInfo) object;
+        //                        Message msg = Message.obtain();
+        //                        msg.what = MSG_WHAT_UPDATE_CITY;
+        //                        msg.obj = mWeatherInfo;
+        //                        mHandler.sendMessage(msg);
+        //                    }
+        //                }
+        //            });
+        //            getWeather(id);
+    }
+
+    private void updateDaily() {
+        if (mDailyFragment != null) {
+            mDailyFragment.initViewPager(this, mWeatherInfo);
+        }
+
+    }
+
+    private void initDailyVpFragment() {
+        FragmentManager fg = getFragmentManager();
+        FragmentTransaction ft = fg.beginTransaction();
+        if (mDailyFragment == null) {
+            mDailyFgCallback = new FragmentViewCallback() {
+                @Override
+                public void onCreatedView() {
+                    mDailyFragment.initViewPager(WeatherActivity.this, mWeatherInfo);
+                }
+            };
+        }
+        if (mDailyFragment == null) {
+            mDailyFragment = DailyFragment.getInstance(this, mDailyFgCallback);
+        }
+
+        ft.add(R.id.frame_vp_weather_daily, mDailyFragment);
+        ft.show(mDailyFragment);
+        ft.commit();
 
     }
 
@@ -196,6 +316,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.ib_weather_city:
                 Intent city_intent = new Intent(WeatherActivity.this, SelectCityActivity.class);
                 startActivityForResult(city_intent, REQUEST_CODE_SELECT_CITY);
+                break;
+            case R.id.tv_weather_toolbar_title:
+                getWeather(mCuttent_city_id);
                 break;
         }
     }
@@ -290,11 +413,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             String city = data.getStringExtra(SelectCityActivity.SELECTED_CITY);
-            mTv_city.setText(city);
-            String cityId = mDbHelper.getCityIdByCity(city);
-            if (cityId == null)
+            //            mTv_city.setText(city);
+            mCuttent_city_id = mDbHelper.getCityIdByCity(city);
+            if (mCuttent_city_id == null)
                 return;
-            getWeather(cityId);
+            getWeather(mCuttent_city_id);
         }
 
     }
@@ -307,8 +430,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 WeatherInfo weatherInfo = JSONUtils.parseWeatherInfoFromJSONWithGSON(respones);
                 Message msg = Message.obtain();
                 msg.what = MSG_WHAT_UPDATE_CITY;
+                msg.arg1 = ARG_ONLINE;
                 msg.obj = weatherInfo;
                 mHandler.sendMessage(msg);
+                // TODO: 2016/8/24 0024  一个线程里面连续发两个msg似乎会出问题
+                //                if (weatherInfo != null) {
+                //                    Message msg_online_update = Message.obtain();
+                //                    msg.what = MSG_WHAT_ONLINE_UPDATE;
+                //                    mHandler.sendMessage(msg_online_update);
+                //                }
             }
 
             @Override

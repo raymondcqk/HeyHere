@@ -55,7 +55,7 @@ public class SetPubInfoActivity extends Activity implements View.OnClickListener
             public void onFocusChange(View v, boolean hasFocus) {
 
                 if (hasFocus == false) {
-                    ArrayList<String> titles = mDbHelper.getProTitleFromDB();
+                    ArrayList<String> titles = mDbHelper.getProjectTitleFromDB();
                     String tmpTitle = mEdt_project.getText().toString();
                     if (titles.contains(tmpTitle)) {
                         mEdt_project.setTextColor(Color.RED);

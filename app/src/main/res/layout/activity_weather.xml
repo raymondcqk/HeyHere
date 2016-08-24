@@ -27,10 +27,12 @@
             <TextView
                 android:id="@+id/tv_weather_toolbar_title"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:layout_marginRight="70dp"
-                android:layout_marginTop="23dp"
+                android:layout_toLeftOf="@+id/ib_weather_city"
+                android:layout_toRightOf="@+id/ib_weather_back"
+                android:gravity="bottom|center_horizontal"
+                android:padding="10dp"
                 android:text="天气"
                 android:textColor="@color/black"
                 android:textSize="10sp"
@@ -52,8 +54,8 @@
         android:id="@+id/pb_weather"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="17dp"/>
 
     <TextView
@@ -64,7 +66,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:gravity="center_horizontal"
-        android:text=""
+        android:text="广州"
         android:textColor="@color/black"
         android:textSize="25sp"/>
 
@@ -76,7 +78,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
-        android:text=""
+        android:text="晴"
         android:textColor="@color/black"
         android:textSize="18sp"/>
 
@@ -88,7 +90,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:gravity="center_horizontal"
-        android:text=""
+        android:text="35"
         android:textColor="@color/black"
         android:textSize="100sp"/>
 
@@ -113,6 +115,7 @@
         android:layout_below="@+id/tv_weather_tmp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        android:text="空气质量指数：85"
         android:textColor="@color/black"/>
 
     <TextView
@@ -122,6 +125,7 @@
         android:layout_below="@+id/tv_weather_aqi"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
+        android:text="良好"
         android:textColor="@color/black"/>
 
     <TextView
@@ -131,13 +135,15 @@
         android:layout_below="@+id/tv_weather_qulity"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
+        android:text="pm2.5:56"
         android:textColor="@color/black"/>
 
-    <LinearLayout
-        android:id="@+id/ll_hours_forecast"
+    <FrameLayout
+        android:id="@+id/frame_vp_weather_daily"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/gray"
-        android:orientation="horizontal"></LinearLayout>
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"></FrameLayout>
+
 
 </RelativeLayout>
