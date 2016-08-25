@@ -48,6 +48,28 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/gray"></View>
+    <LinearLayout
+
+        android:id="@+id/layout_message_adv"
+        style="@style/message_fg_list_layout">
+
+        <ImageView
+            style="@style/message_fg_list_icon_left"
+            android:src="@mipmap/piggy_74px"/>
+
+        <TextView
+            style="@style/message_fg_list_text"
+            android:text="@string/message_adv"/>
+
+        <ImageView
+            style="@style/message_fg_list_icon_right"
+            android:src="@drawable/next_96px"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray"></View>
 
     <View
         android:layout_width="match_parent"
@@ -88,12 +110,7 @@
             android:text="【番禺】 阵雨 26℃/29℃ 更新时间 11:17"
             android:textSize="10sp"/>
 
-        <!--<ImageView-->
-            <!--android:id="@+id/img_message_weather_right"-->
-            <!--style="@style/message_fg_list_icon_right"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:src="@drawable/next_96px"/>-->
+
     </RelativeLayout>
 
     <View

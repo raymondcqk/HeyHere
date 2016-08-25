@@ -31,6 +31,7 @@
         <activity android:name=".activity.ContactActivity"></activity>
         <activity android:name=".activity.WeatherActivity"></activity>
         <activity android:name=".activity.SelectCityActivity"></activity>
+        <activity android:name=".activity.AdvApkDownloadActivity"></activity>
 
         <provider
             android:name="com.raymondqk.raysqlitepractice.utils.provider.WeatherProvider"

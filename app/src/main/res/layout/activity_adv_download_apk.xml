@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/ib_adv_down_bili"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/lv_item_bg_selector"
+        android:src="@mipmap/bilibili_141px"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ib_adv_down_bili"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="哔哩哔哩动画"
+        android:textColor="@color/black"/>
+
+    <!--<ImageView-->
+    <!--android:layout_width="150dp"-->
+    <!--android:layout_height="150dp"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:src="@mipmap/downlaod_circle_128px"/>-->
+
+    <TextView
+        android:textSize="16sp"
+        android:id="@+id/tv_adv_download_progress"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:background="@mipmap/circle_253px"
+        android:gravity="center"
+        android:text="50%"
+        android:textColor="@color/white"/>
+
+    <ProgressBar
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:id="@+id/pb_adv_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="50"/>
+
+</RelativeLayout>

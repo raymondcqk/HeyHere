@@ -421,7 +421,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         /**
-         * 结果操作，主线程
+         * 结果操作，background return返回到这里，主线程
          *
          * @param s
          */

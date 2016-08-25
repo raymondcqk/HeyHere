@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.raymondqk.raysqlitepractice.R;
+import com.raymondqk.raysqlitepractice.activity.AdvApkDownloadActivity;
 import com.raymondqk.raysqlitepractice.activity.ContactActivity;
 import com.raymondqk.raysqlitepractice.activity.MainActivity;
 import com.raymondqk.raysqlitepractice.activity.WeatherActivity;
@@ -34,6 +35,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout mLl_weather;
     private TextView mTv_weather;
     private String mWeather_bref;
+    private LinearLayout mLl_adv;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,8 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         mLl_contact.setOnClickListener(this);
         mLl_notification = (LinearLayout) mView.findViewById(R.id.layout_message_notification);
         mLl_notification.setOnClickListener(this);
+        mLl_adv = (LinearLayout) mView.findViewById(R.id.layout_message_adv);
+        mLl_adv.setOnClickListener(this);
 
         mLl_weather = (RelativeLayout) mView.findViewById(R.id.layout_message_weather);
         mLl_weather.setOnClickListener(this);
@@ -61,6 +65,8 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         mTv_weather = (TextView) mView.findViewById(R.id.tv_message_weather_detail);
         mWeather_bref = SharedPreferenceUtils.getWeatherBref();
         mTv_weather.setText(mWeather_bref);
+
+
         return mView;
     }
 
@@ -77,6 +83,10 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
             case R.id.layout_message_weather:
                 intent.setClass(mMainActivity, WeatherActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_WEATHER);
+                break;
+            case R.id.layout_message_adv:
+                intent.setClass(mMainActivity, AdvApkDownloadActivity.class);
+                startActivity(intent);
                 break;
         }
 
