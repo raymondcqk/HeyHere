@@ -78,16 +78,22 @@ public class AdvApkDownloadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String httpUrl = "http://dl.hdslb.com/mobile/latest/iBiliPlayer-bili.apk";
-                /*先用Thread来执行下载操作*/
-//                downloadWithThread(httpUrl);
+                /**
+                 * 先用Thread来执行下载操作
+                 */
+                //                downloadWithThread(httpUrl);
 
                 /**
                  * 通过AsyncTask执行下载操作
+                 *
+                 * 前期网络连接请求、文件对象的创建，通过Thread完成
+                 * 文件下载的操作交由AsyncTask
                  */
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
+                            //根据url，创建文件对象、http连接对象
                             final File file = createDownLoadFile(httpUrl);
                             if (file != null) {
                                 runOnUiThread(new Runnable() {
@@ -98,11 +104,14 @@ public class AdvApkDownloadActivity extends AppCompatActivity {
                                         dialog.setIcon(R.mipmap.bilibili_141px);
                                         dialog.setCancelable(false);
                                         dialog.setNegativeButton("取消", null);
+                                        //判断文件是否存在，然后根据其是否存在执行AsyncTask，，传入对应参数，进行最后的“文件下载”
                                         if (mDownloadFile.exists()) {
                                             dialog.setMessage("文件已存在，是否删除并重新下载？");
                                             dialog.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
+                                                    //执行AsyncTask
+                                                    //参数 true 代表文件已存在
                                                     new DownloadAsyncTask().execute(true);
                                                 }
                                             });
@@ -111,12 +120,12 @@ public class AdvApkDownloadActivity extends AppCompatActivity {
                                             dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
+                                                    //参数 true 代表文件不存在
                                                     new DownloadAsyncTask().execute(false);
                                                 }
                                             });
                                         }
                                         dialog.show();
-
                                     }
                                 });
                             }
@@ -301,10 +310,10 @@ public class AdvApkDownloadActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (aBoolean!=null){
-                if (aBoolean==true){
+            if (aBoolean != null) {
+                if (aBoolean == true) {
                     Toast.makeText(AdvApkDownloadActivity.this, "下载完成", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Toast.makeText(AdvApkDownloadActivity.this, "下载失败", Toast.LENGTH_SHORT).show();
 
                 }
@@ -330,6 +339,7 @@ public class AdvApkDownloadActivity extends AppCompatActivity {
                     int downloadSize = 0;
                     mProgress = 0;
                     InputStream in = mConnection.getInputStream();
+                    //缓存区 1024bit
                     byte[] bytes = new byte[1024];
                     int length = 0;
                     OutputStream out = new FileOutputStream(mDownloadFile);

@@ -9,9 +9,10 @@
     </style>
 
     <style name="edt_get_info">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
         <item name="android:padding">5dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:background">@drawable/list_item_bg</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -107,6 +108,14 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">15dp</item>
+    </style>
+
+    <style name="btn_project_details_bottom">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/lv_item_bg_selector</item>
     </style>
 
     <color name="black">#222</color>

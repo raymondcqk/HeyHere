@@ -12,13 +12,13 @@
         app:navigationIcon="@drawable/back_dark">
 
         <TextView
-            android:textSize="22sp"
-            android:textColor="@color/black"
-            android:layout_marginRight="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
             android:gravity="center"
-            android:text="详情"/>
+            android:text="招募详情"
+            android:textColor="@color/black"
+            android:textSize="22sp"/>
     </android.support.v7.widget.Toolbar>
 
     <TextView
@@ -26,8 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/project_toolbar"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:text="XXX神奇的项目"
         android:textColor="@color/black"
         android:textSize="22sp"/>
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/pro_tv_title"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="20dp"
         android:text="星际联盟"
         android:textColor="@color/black"/>
 
@@ -66,7 +66,7 @@
         android:layout_height="1px"
         android:layout_below="@id/pro_tv_pubdate"
         android:layout_marginTop="3dp"
-        android:background="@color/colorPrimary"></View>
+        android:background="@color/gray"></View>
 
     <ScrollView
 
@@ -83,4 +83,27 @@
             android:text="@string/test_pro_content"
             android:textColor="@color/black"/>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/layout_project_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <Button
+            android:text="收藏"
+            style="@style/btn_project_details_bottom"/>
+
+        <Button
+            style="@style/btn_project_details_bottom"
+
+            android:text="响应招募"/>
+
+        <Button
+            style="@style/btn_project_details_bottom"
+
+            android:text="联系发布者"/>
+    </LinearLayout>
 </RelativeLayout>

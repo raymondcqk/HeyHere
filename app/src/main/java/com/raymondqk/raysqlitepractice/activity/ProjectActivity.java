@@ -34,7 +34,7 @@ public class ProjectActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_project);
+        setContentView(R.layout.activity_project_detail);
         //进入项目详情页之后，立马获取外部存储器读写权限,因为这里有文件读写的功能，而API23+需要从代码层面获取权限。
         VerifyPermissionUtils.verifyStoragePermission(ProjectActivity.this);
         initToolbar();

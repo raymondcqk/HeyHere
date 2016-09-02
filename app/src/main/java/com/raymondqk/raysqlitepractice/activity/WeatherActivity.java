@@ -215,7 +215,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             }
         };
         ProviderUtils.insertCurrentWeather(this, weatherInfo, insertCurrentWeatherCallback);
-        //        mDbHelper.insertCurrentWeather(weatherInfo,insertCurrentWeatherCallback );
+//                mDbHelper.insertCurrentWeather(weatherInfo, insertCurrentWeatherCallback);
     }
 
     private void pullXMLResult(String xmlStr) {

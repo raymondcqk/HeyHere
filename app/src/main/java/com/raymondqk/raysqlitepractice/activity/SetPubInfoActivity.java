@@ -34,7 +34,7 @@ public class SetPubInfoActivity extends Activity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_pubinfo);
+        setContentView(R.layout.activity_publish_write);
         initDB();
         initView();
     }

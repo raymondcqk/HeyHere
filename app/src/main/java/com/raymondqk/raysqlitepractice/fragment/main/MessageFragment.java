@@ -66,7 +66,6 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         mWeather_bref = SharedPreferenceUtils.getWeatherBref();
         mTv_weather.setText(mWeather_bref);
 
-
         return mView;
     }
 

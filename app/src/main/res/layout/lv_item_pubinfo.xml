@@ -33,12 +33,12 @@
             android:layout_height="100dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/pubinfo_devider"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@+id/item_pubdate_title"
             android:ellipsize="end"
-            android:lineSpacingExtra="1dp"
+
             android:maxLines="8"
             android:text="简介:这是一个狂帅炫酷的项目团队，热邪期待每一个充满希望的你的到来，啊哈哈"
             android:textSize="10sp"
@@ -51,6 +51,10 @@
             android:layout_alignTop="@+id/item_project_brief"
             android:layout_marginRight="5dp"
             android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/item_project_brief"
+            android:ellipsize="end"
+            android:gravity="right"
+            android:maxLines="2"
             android:text="大云屋•众创空间"/>
 
         <TextView
@@ -59,8 +63,9 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/item_orgnization"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="3dp"
-            android:text="陈其康"/>
+            android:layout_marginTop="5dp"
+            android:text="陈其康"
+            android:textSize="12sp"/>
 
 
         <TextView
@@ -70,7 +75,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:layout_marginTop="3dp"
-            android:text="2016年8月10日"/>
+            android:text="2016年8月10日"
+            android:textSize="10sp"/>
 
         <TextView
             android:id="@+id/item_pubdate_title"
@@ -79,7 +85,8 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="3dp"
             android:layout_toLeftOf="@id/item_pubdate"
-            android:text="发布:"/>
+            android:text="发布:"
+            android:textSize="10sp"/>
 
         <TextView
             android:id="@+id/item_deadline_title"
@@ -88,7 +95,8 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="3dp"
             android:layout_toLeftOf="@id/item_pubdate"
-            android:text="截止:"/>
+            android:text="截止:"
+            android:textSize="10sp"/>
 
         <TextView
             android:id="@+id/item_deadline"
@@ -97,6 +105,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:layout_marginTop="3dp"
-            android:text="2016年8月18日"/>
+            android:text="2016年8月18日"
+            android:textSize="10sp"/>
     </RelativeLayout>
 </LinearLayout>
