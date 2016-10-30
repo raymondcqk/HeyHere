@@ -71,6 +71,29 @@
         android:layout_height="1px"
         android:background="@color/gray"></View>
 
+    <LinearLayout
+
+        android:id="@+id/layout_message_news"
+        style="@style/message_fg_list_layout">
+
+        <ImageView
+            style="@style/message_fg_list_icon_left"
+            android:src="@mipmap/smartphone_106px"/>
+
+        <TextView
+            style="@style/message_fg_list_text"
+            android:text="@string/message_news"/>
+
+        <ImageView
+            style="@style/message_fg_list_icon_right"
+            android:src="@drawable/next_96px"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray"></View>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -3,7 +3,9 @@ package com.raymondqk.raysqlitepractice.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -116,10 +118,31 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_REGIST && resultCode == RESULT_CODE_REGIST) {
             mEdt_username.setText(data.getStringExtra(RegisterActivity.KEY_REG_PHONE));
+
         }
     }
 
     private void initUtils() {
         mSpUtils = new SharedPreferenceUtils(this);
+    }
+
+
+    private void test(){
+        mEdt_username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }

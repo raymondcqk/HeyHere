@@ -10,4 +10,5 @@
     <color name="darkgreen">#1a342a</color>
     <color name="yellow">#ffd900</color>
     <color name="darkgray">#999</color>
+    <color name="translucence">#80000000</color>
 </resources>

@@ -33,12 +33,12 @@
             android:id="@+id/img_guide_dot_2"
             style="@style/img_guide_dot"/>
 
-        <ImageView
-            android:id="@+id/img_guide_dot_3"
-            style="@style/img_guide_dot"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/img_guide_dot_3"-->
+            <!--style="@style/img_guide_dot"/>-->
 
-        <ImageView
-            android:id="@+id/img_guide_dot_4"
-            style="@style/img_guide_dot"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/img_guide_dot_4"-->
+            <!--style="@style/img_guide_dot"/>-->
     </LinearLayout>
 </RelativeLayout>

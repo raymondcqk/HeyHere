@@ -44,8 +44,8 @@ public class GuideActivity extends Activity implements View.OnClickListener {
         mImg_dot_0 = (ImageView) findViewById(R.id.img_guide_dot_0);
         mImg_dot_1 = (ImageView) findViewById(R.id.img_guide_dot_1);
         mImg_dot_2 = (ImageView) findViewById(R.id.img_guide_dot_2);
-        mImg_dot_3 = (ImageView) findViewById(R.id.img_guide_dot_3);
-        mImg_dot_4 = (ImageView) findViewById(R.id.img_guide_dot_4);
+//        mImg_dot_3 = (ImageView) findViewById(R.id.img_guide_dot_3);
+//        mImg_dot_4 = (ImageView) findViewById(R.id.img_guide_dot_4);
         mImg_dot_0.setImageResource(R.mipmap.redball_72px);
 
         //为viewpager adapter准备view数据源列表
@@ -53,9 +53,9 @@ public class GuideActivity extends Activity implements View.OnClickListener {
 
         mViews = new ArrayList<View>();
         mViews.add(mInflater.inflate(R.layout.guide_page_01, null));
-        mViews.add(mInflater.inflate(R.layout.guide_page_02, null));
+//        mViews.add(mInflater.inflate(R.layout.guide_page_02, null));
         mViews.add(mInflater.inflate(R.layout.guide_page_03, null));
-        mViews.add(mInflater.inflate(R.layout.guide_page_04, null));
+//        mViews.add(mInflater.inflate(R.layout.guide_page_04, null));
         mViews.add(mInflater.inflate(R.layout.guide_page_05, null));
         mViews.add(mInflater.inflate(R.layout.guide_page_06, null));
 
@@ -64,7 +64,7 @@ public class GuideActivity extends Activity implements View.OnClickListener {
         mViewPager = (ViewPager) findViewById(R.id.viewpager_guide);
 
         //设置viewpager动画
-        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+//        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         //参数2：transformer接口对象 --->哪里可以找到现成的实现了transformer接口的实现类
 
         //为viewpager绑定adapter
@@ -72,7 +72,7 @@ public class GuideActivity extends Activity implements View.OnClickListener {
 
 
         //获取最后一页的布局view对象，并获得该布局的控件引用，设置button的点击事件
-        View guide_log_view = mViews.get(5);
+        View guide_log_view = mViews.get(3);
         Button btn_try = (Button) guide_log_view.findViewById(R.id.btn_guide_try);
         Button btn_signin = (Button) guide_log_view.findViewById(R.id.btn_guide_sign_in);
         btn_try.setOnClickListener(this);
@@ -87,7 +87,7 @@ public class GuideActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onPageSelected(int position) {
-                if (position != 5) {
+                if (position != 3) {
                     mDots.setVisibility(View.VISIBLE);
                     changeDots(position);
                 } else {
@@ -111,8 +111,8 @@ public class GuideActivity extends Activity implements View.OnClickListener {
         mImg_dot_0.setImageResource(defaultResid);
         mImg_dot_1.setImageResource(defaultResid);
         mImg_dot_2.setImageResource(defaultResid);
-        mImg_dot_3.setImageResource(defaultResid);
-        mImg_dot_4.setImageResource(defaultResid);
+//        mImg_dot_3.setImageResource(defaultResid);
+//        mImg_dot_4.setImageResource(defaultResid);
 
         switch (i) {
             case 0:
@@ -124,12 +124,12 @@ public class GuideActivity extends Activity implements View.OnClickListener {
             case 2:
                 mImg_dot_2.setImageResource(selectedResid);
                 break;
-            case 3:
-                mImg_dot_3.setImageResource(selectedResid);
-                break;
-            case 4:
-                mImg_dot_4.setImageResource(selectedResid);
-                break;
+//            case 3:
+//                mImg_dot_3.setImageResource(selectedResid);
+//                break;
+//            case 4:
+//                mImg_dot_4.setImageResource(selectedResid);
+//                break;
         }
 
     }

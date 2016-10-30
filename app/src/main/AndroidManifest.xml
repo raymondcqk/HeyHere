@@ -1,13 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.raymondqk.raysqlitepractice">
+    package="com.raymondqk.raysqlitepractice">
 
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,26 +17,32 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.LaunchActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
-                <category android:name="android.intent.category.LAUNCHER"></category>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GuideActivity"></activity>
-        <activity android:name=".activity.SetPubInfoActivity"></activity>
-        <activity android:name=".activity.MainActivity"></activity>
-        <activity android:name=".activity.PubinfoChangeActivity"></activity>
-        <activity android:name=".activity.ProjectActivity"></activity>
-        <activity android:name=".activity.LoginActivity"></activity>
-        <activity android:name=".activity.RegisterActivity"></activity>
-        <activity android:name=".activity.ContactActivity"></activity>
-        <activity android:name=".activity.WeatherActivity"></activity>
-        <activity android:name=".activity.SelectCityActivity"></activity>
-        <activity android:name=".activity.AdvApkDownloadActivity"></activity>
+        <activity android:name=".activity.GuideActivity" />
+        <activity android:name=".activity.SetPubInfoActivity" />
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.PubinfoChangeActivity" />
+        <activity android:name=".activity.ProjectActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.ContactActivity" />
+        <activity android:name=".activity.WeatherActivity" />
+        <activity android:name=".activity.SelectCityActivity" />
+        <activity android:name=".activity.AdvApkDownloadActivity" />
+        <activity
+            android:name=".activity.NewsMainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.NewsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="com.raymondqk.raysqlitepractice.utils.provider.WeatherProvider"
-            android:authorities="com.raymondcqk.ishere.provider"></provider>
-        <service android:name=".service.WeatherService"/>
+            android:authorities="com.raymondcqk.ishere.provider" />
+        <service android:name=".service.WeatherService" />
     </application>
 
 

@@ -119,4 +119,19 @@
     </style>
 
     <color name="black">#222</color>
+
+    <!--news activity theme style-->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+    <!--app bar style-->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar"></style>
+    <!--news toolbar style-->
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark"></style>
+
+    <style name="ActionBarMenu" parent="@android:style/TextAppearance.Holo.Large">
+        <item name="android:textColor">@android:color/holo_blue_light</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

@@ -16,6 +16,8 @@ import com.raymondqk.raysqlitepractice.R;
 import com.raymondqk.raysqlitepractice.activity.AdvApkDownloadActivity;
 import com.raymondqk.raysqlitepractice.activity.ContactActivity;
 import com.raymondqk.raysqlitepractice.activity.MainActivity;
+import com.raymondqk.raysqlitepractice.activity.NewsActivity;
+import com.raymondqk.raysqlitepractice.activity.NewsMainActivity;
 import com.raymondqk.raysqlitepractice.activity.WeatherActivity;
 import com.raymondqk.raysqlitepractice.model.weather.WeatherInfo;
 import com.raymondqk.raysqlitepractice.utils.SharedPreferenceUtils;
@@ -36,6 +38,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private TextView mTv_weather;
     private String mWeather_bref;
     private LinearLayout mLl_adv;
+    private LinearLayout ll_news;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,9 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         mWeather_bref = SharedPreferenceUtils.getWeatherBref();
         mTv_weather.setText(mWeather_bref);
 
+        ll_news = (LinearLayout) mView.findViewById(R.id.layout_message_news);
+        ll_news.setOnClickListener(this);
+
         return mView;
     }
 
@@ -84,11 +90,20 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(intent, REQUEST_CODE_WEATHER);
                 break;
             case R.id.layout_message_adv:
-                intent.setClass(mMainActivity, AdvApkDownloadActivity.class);
+                startActivityMsg(intent,AdvApkDownloadActivity.class);
+                break;
+            case R.id.layout_message_news:
+                intent.setClass(mMainActivity, NewsMainActivity.class);
+//                intent.setClass(mMainActivity, NewsActivity.class);
                 startActivity(intent);
                 break;
         }
 
+    }
+
+    private void startActivityMsg(Intent intent,Class clazz) {
+        intent.setClass(mMainActivity, clazz);
+        startActivity(intent);
     }
 
     @Override
